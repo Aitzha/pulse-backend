@@ -3,7 +3,7 @@ import { IsDateString, IsNotEmpty, IsNumber, IsOptional, IsString, Min } from 'c
 export class CreateActivityDto {
   @IsString()
   @IsNotEmpty()
-  title: string;
+  title!: string;
 
   @IsString()
   @IsOptional()
@@ -11,10 +11,10 @@ export class CreateActivityDto {
 
   @IsString()
   @IsNotEmpty()
-  category: string;
+  category!: string;
 
   @IsDateString()
-  startTime: string;
+  startTime!: string;
 
   @IsDateString()
   @IsOptional()

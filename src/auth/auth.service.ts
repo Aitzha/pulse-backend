@@ -13,19 +13,19 @@ export class AuthService {
   ) {}
 
   async register(dto: RegisterDto) {
-    const existing = await this.usersService.findByEmail(dto.email);
+    const existing = await this.usersService.findByUsername(dto.username);
     if (existing) {
-      throw new ConflictException('Email already in use');
+      throw new ConflictException('Username already taken');
     }
 
     const hashedPassword = await bcrypt.hash(dto.password, 10);
-    const user = await this.usersService.create(dto.email, hashedPassword, dto.name);
+    const user = await this.usersService.create(dto.username, hashedPassword);
 
-    return this.buildTokenResponse(user.id, user.email);
+    return this.buildTokenResponse(user.id, user.username);
   }
 
   async login(dto: LoginDto) {
-    const user = await this.usersService.findByEmail(dto.email);
+    const user = await this.usersService.findByUsername(dto.username);
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
@@ -35,11 +35,11 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    return this.buildTokenResponse(user.id, user.email);
+    return this.buildTokenResponse(user.id, user.username);
   }
 
-  private buildTokenResponse(userId: string, email: string) {
-    const payload = { sub: userId, email };
+  private buildTokenResponse(userId: string, username: string) {
+    const payload = { sub: userId, username };
     return {
       accessToken: this.jwtService.sign(payload),
     };

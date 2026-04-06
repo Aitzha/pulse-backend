@@ -3,30 +3,22 @@ import { HydratedDocument, Types } from 'mongoose';
 
 export type FinanceDocument = HydratedDocument<Finance>;
 
-export enum TransactionType {
-  INCOME = 'income',
-  EXPENSE = 'expense',
-}
-
 @Schema({ timestamps: true })
 export class Finance {
   @Prop({ type: Types.ObjectId, ref: 'User', required: true, index: true })
-  userId: Types.ObjectId;
-
-  @Prop({ required: true, enum: TransactionType })
-  type: TransactionType;
+  userId!: Types.ObjectId;
 
   @Prop({ required: true })
-  amount: number;
+  provider!: string;
 
   @Prop({ required: true })
-  category: string;
-
-  @Prop()
-  description: string;
+  category!: string;
 
   @Prop({ required: true })
-  date: Date;
+  amount!: number;
+
+  @Prop({ required: true })
+  currency!: string;
 }
 
 export const FinanceSchema = SchemaFactory.createForClass(Finance);

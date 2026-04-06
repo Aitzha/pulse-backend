@@ -6,25 +6,25 @@ export type ActivityDocument = HydratedDocument<Activity>;
 @Schema({ timestamps: true })
 export class Activity {
   @Prop({ type: Types.ObjectId, ref: 'User', required: true, index: true })
-  userId: Types.ObjectId;
+  userId!: Types.ObjectId;
 
   @Prop({ required: true })
-  title: string;
+  title!: string;
 
   @Prop()
-  description: string;
+  description!: string;
 
   @Prop({ required: true })
-  category: string;
+  category!: string;
 
   @Prop({ required: true })
-  startTime: Date;
+  startTime!: Date;
 
   @Prop()
-  endTime: Date;
+  endTime!: Date;
 
   @Prop({ min: 0 })
-  durationMinutes: number;
+  durationMinutes!: number;
 }
 
 export const ActivitySchema = SchemaFactory.createForClass(Activity);

@@ -1,22 +1,18 @@
-import { IsDateString, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, Min } from 'class-validator';
-import { TransactionType } from '../schemas/finance.schema.js';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class CreateFinanceDto {
-  @IsEnum(TransactionType)
-  type: TransactionType;
-
-  @IsNumber()
-  @Min(0)
-  amount: number;
+  @IsString()
+  @IsNotEmpty()
+  provider!: string;
 
   @IsString()
   @IsNotEmpty()
-  category: string;
+  category!: string;
+
+  @IsNumber()
+  amount!: number;
 
   @IsString()
-  @IsOptional()
-  description?: string;
-
-  @IsDateString()
-  date: string;
+  @IsNotEmpty()
+  currency!: string;
 }
