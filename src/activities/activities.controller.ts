@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Request, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
 import { ActivitiesService } from './activities.service.js';
 import { CreateActivityDto } from './dto/create-activity.dto.js';
@@ -25,7 +35,11 @@ export class ActivitiesController {
   }
 
   @Patch(':id')
-  update(@Request() req, @Param('id') id: string, @Body() dto: UpdateActivityDto) {
+  update(
+    @Request() req,
+    @Param('id') id: string,
+    @Body() dto: UpdateActivityDto,
+  ) {
     return this.activitiesService.update(id, req.user.userId, dto);
   }
 
