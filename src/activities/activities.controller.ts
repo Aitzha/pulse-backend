@@ -14,29 +14,33 @@ import { ActivitiesService } from './activities.service.js';
 import { CreateActivityDto } from './dto/create-activity.dto.js';
 import { UpdateActivityDto } from './dto/update-activity.dto.js';
 
+interface AuthedRequest {
+  user: { userId: string; username: string };
+}
+
 @Controller('activities')
 @UseGuards(JwtAuthGuard)
 export class ActivitiesController {
   constructor(private activitiesService: ActivitiesService) {}
 
   @Post()
-  create(@Request() req, @Body() dto: CreateActivityDto) {
+  create(@Request() req: AuthedRequest, @Body() dto: CreateActivityDto) {
     return this.activitiesService.create(req.user.userId, dto);
   }
 
   @Get()
-  findAll(@Request() req) {
+  findAll(@Request() req: AuthedRequest) {
     return this.activitiesService.findAllByUser(req.user.userId);
   }
 
   @Get(':id')
-  findOne(@Request() req, @Param('id') id: string) {
+  findOne(@Request() req: AuthedRequest, @Param('id') id: string) {
     return this.activitiesService.findOne(id, req.user.userId);
   }
 
   @Patch(':id')
   update(
-    @Request() req,
+    @Request() req: AuthedRequest,
     @Param('id') id: string,
     @Body() dto: UpdateActivityDto,
   ) {
@@ -44,7 +48,7 @@ export class ActivitiesController {
   }
 
   @Delete(':id')
-  remove(@Request() req, @Param('id') id: string) {
+  remove(@Request() req: AuthedRequest, @Param('id') id: string) {
     return this.activitiesService.remove(id, req.user.userId);
   }
 }

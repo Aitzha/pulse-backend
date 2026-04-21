@@ -7,9 +7,14 @@ import { UpdateActivityDto } from './dto/update-activity.dto.js';
 
 @Injectable()
 export class ActivitiesService {
-  constructor(@InjectModel(Activity.name) private activityModel: Model<ActivityDocument>) {}
+  constructor(
+    @InjectModel(Activity.name) private activityModel: Model<ActivityDocument>,
+  ) {}
 
-  async create(userId: string, dto: CreateActivityDto): Promise<ActivityDocument> {
+  async create(
+    userId: string,
+    dto: CreateActivityDto,
+  ): Promise<ActivityDocument> {
     return this.activityModel.create({ ...dto, userId });
   }
 
@@ -18,14 +23,20 @@ export class ActivitiesService {
   }
 
   async findOne(id: string, userId: string): Promise<ActivityDocument> {
-    const activity = await this.activityModel.findOne({ _id: id, userId }).exec();
+    const activity = await this.activityModel
+      .findOne({ _id: id, userId })
+      .exec();
     if (!activity) {
       throw new NotFoundException('Activity not found');
     }
     return activity;
   }
 
-  async update(id: string, userId: string, dto: UpdateActivityDto): Promise<ActivityDocument> {
+  async update(
+    id: string,
+    userId: string,
+    dto: UpdateActivityDto,
+  ): Promise<ActivityDocument> {
     const activity = await this.activityModel
       .findOneAndUpdate({ _id: id, userId }, dto, { new: true })
       .exec();
@@ -36,7 +47,9 @@ export class ActivitiesService {
   }
 
   async remove(id: string, userId: string): Promise<void> {
-    const result = await this.activityModel.deleteOne({ _id: id, userId }).exec();
+    const result = await this.activityModel
+      .deleteOne({ _id: id, userId })
+      .exec();
     if (result.deletedCount === 0) {
       throw new NotFoundException('Activity not found');
     }

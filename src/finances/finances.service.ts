@@ -7,9 +7,14 @@ import { UpdateFinanceDto } from './dto/update-finance.dto.js';
 
 @Injectable()
 export class FinancesService {
-  constructor(@InjectModel(Finance.name) private financeModel: Model<FinanceDocument>) {}
+  constructor(
+    @InjectModel(Finance.name) private financeModel: Model<FinanceDocument>,
+  ) {}
 
-  async create(userId: string, dto: CreateFinanceDto): Promise<FinanceDocument> {
+  async create(
+    userId: string,
+    dto: CreateFinanceDto,
+  ): Promise<FinanceDocument> {
     return this.financeModel.create({ ...dto, userId });
   }
 
@@ -25,7 +30,11 @@ export class FinancesService {
     return finance;
   }
 
-  async update(id: string, userId: string, dto: UpdateFinanceDto): Promise<FinanceDocument> {
+  async update(
+    id: string,
+    userId: string,
+    dto: UpdateFinanceDto,
+  ): Promise<FinanceDocument> {
     const finance = await this.financeModel
       .findOneAndUpdate({ _id: id, userId }, dto, { new: true })
       .exec();
@@ -36,7 +45,9 @@ export class FinancesService {
   }
 
   async remove(id: string, userId: string): Promise<void> {
-    const result = await this.financeModel.deleteOne({ _id: id, userId }).exec();
+    const result = await this.financeModel
+      .deleteOne({ _id: id, userId })
+      .exec();
     if (result.deletedCount === 0) {
       throw new NotFoundException('Transaction not found');
     }
