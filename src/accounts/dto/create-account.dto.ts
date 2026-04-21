@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
-export class CreateFinanceDto {
+export class CreateAccountDto {
   @IsString()
   @IsNotEmpty()
   provider!: string;
@@ -10,7 +10,7 @@ export class CreateFinanceDto {
   category!: string;
 
   @IsNumber()
-  amount!: number;
+  initialBalance!: number;
 
   @IsString()
   @IsNotEmpty()

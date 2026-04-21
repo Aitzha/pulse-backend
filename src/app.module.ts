@@ -3,7 +3,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module.js';
 import { UsersModule } from './users/users.module.js';
-import { FinancesModule } from './finances/finances.module.js';
+import { AccountsModule } from './accounts/accounts.module.js';
+import { TransactionsModule } from './transactions/transactions.module.js';
+import { LiabilitiesModule } from './liabilities/liabilities.module.js';
 import { ActivitiesModule } from './activities/activities.module.js';
 
 @Module({
@@ -17,7 +19,9 @@ import { ActivitiesModule } from './activities/activities.module.js';
     }),
     AuthModule,
     UsersModule,
-    FinancesModule,
+    AccountsModule,
+    TransactionsModule,
+    LiabilitiesModule,
     ActivitiesModule,
   ],
 })

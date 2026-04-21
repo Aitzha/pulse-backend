@@ -1,10 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
 
-export type FinanceDocument = HydratedDocument<Finance>;
+export type AccountDocument = HydratedDocument<Account>;
 
 @Schema({ timestamps: true })
-export class Finance {
+export class Account {
   @Prop({ type: Types.ObjectId, ref: 'User', required: true, index: true })
   userId!: Types.ObjectId;
 
@@ -15,10 +15,10 @@ export class Finance {
   category!: string;
 
   @Prop({ required: true })
-  amount!: number;
+  initialBalance!: number;
 
   @Prop({ required: true })
   currency!: string;
 }
 
-export const FinanceSchema = SchemaFactory.createForClass(Finance);
+export const AccountSchema = SchemaFactory.createForClass(Account);
