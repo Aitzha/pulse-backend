@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Activity, ActivityDocument } from './schemas/activity.schema.js';
 import { CreateActivityDto } from './dto/create-activity.dto.js';
+import { QueryActivityDto } from './dto/query-activity.dto.js';
 import { UpdateActivityDto } from './dto/update-activity.dto.js';
 
 @Injectable()
@@ -18,8 +19,18 @@ export class ActivitiesService {
     return this.activityModel.create({ ...dto, userId });
   }
 
-  async findAllByUser(userId: string): Promise<ActivityDocument[]> {
-    return this.activityModel.find({ userId }).sort({ startTime: -1 }).exec();
+  async findAllByUser(
+    userId: string,
+    query: QueryActivityDto = {},
+  ): Promise<ActivityDocument[]> {
+    const filter: Record<string, unknown> = { userId };
+    if (query.from || query.to) {
+      const range: Record<string, Date> = {};
+      if (query.from) range.$gte = new Date(query.from);
+      if (query.to) range.$lte = new Date(query.to);
+      filter.startTime = range;
+    }
+    return this.activityModel.find(filter).sort({ startTime: -1 }).exec();
   }
 
   async findOne(id: string, userId: string): Promise<ActivityDocument> {

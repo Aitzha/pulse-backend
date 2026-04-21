@@ -6,12 +6,14 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Request,
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
 import { ActivitiesService } from './activities.service.js';
 import { CreateActivityDto } from './dto/create-activity.dto.js';
+import { QueryActivityDto } from './dto/query-activity.dto.js';
 import { UpdateActivityDto } from './dto/update-activity.dto.js';
 
 interface AuthedRequest {
@@ -29,8 +31,8 @@ export class ActivitiesController {
   }
 
   @Get()
-  findAll(@Request() req: AuthedRequest) {
-    return this.activitiesService.findAllByUser(req.user.userId);
+  findAll(@Request() req: AuthedRequest, @Query() query: QueryActivityDto) {
+    return this.activitiesService.findAllByUser(req.user.userId, query);
   }
 
   @Get(':id')
