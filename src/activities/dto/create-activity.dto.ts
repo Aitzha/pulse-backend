@@ -1,9 +1,14 @@
 import {
   IsDateString,
+  IsEnum,
   IsNotEmpty,
   IsOptional,
   IsString,
 } from 'class-validator';
+import {
+  ActivityCategory,
+  ActivitySubcategory,
+} from '../schemas/activity.schema.js';
 
 export class CreateActivityDto {
   @IsString()
@@ -14,9 +19,11 @@ export class CreateActivityDto {
   @IsOptional()
   description?: string;
 
-  @IsString()
-  @IsNotEmpty()
-  category!: string;
+  @IsEnum(ActivityCategory)
+  category!: ActivityCategory;
+
+  @IsEnum(ActivitySubcategory)
+  subcategory!: ActivitySubcategory;
 
   @IsDateString()
   startTime!: string;

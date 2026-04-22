@@ -1,7 +1,17 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Activity, ActivityDocument } from './schemas/activity.schema.js';
+import {
+  ACTIVITY_SUBCATEGORIES,
+  Activity,
+  ActivityCategory,
+  ActivityDocument,
+  ActivitySubcategory,
+} from './schemas/activity.schema.js';
 import { CreateActivityDto } from './dto/create-activity.dto.js';
 import { QueryActivityDto } from './dto/query-activity.dto.js';
 import { UpdateActivityDto } from './dto/update-activity.dto.js';
@@ -16,6 +26,7 @@ export class ActivitiesService {
     userId: string,
     dto: CreateActivityDto,
   ): Promise<ActivityDocument> {
+    this.assertSubcategoryMatches(dto.category, dto.subcategory);
     const activity = new this.activityModel({ ...dto, userId });
     if (activity.endTime) {
       activity.durationMinutes = this.calculateDurationMinutes(
@@ -31,6 +42,17 @@ export class ActivitiesService {
       0,
       Math.round((endTime.getTime() - startTime.getTime()) / 60000),
     );
+  }
+
+  private assertSubcategoryMatches(
+    category: ActivityCategory,
+    subcategory: ActivitySubcategory,
+  ): void {
+    if (!ACTIVITY_SUBCATEGORIES[category].includes(subcategory)) {
+      throw new BadRequestException(
+        `Subcategory '${subcategory}' is not valid for category '${category}'`,
+      );
+    }
   }
 
   async findAllByUser(
@@ -69,6 +91,7 @@ export class ActivitiesService {
       throw new NotFoundException('Activity not found');
     }
     Object.assign(activity, dto);
+    this.assertSubcategoryMatches(activity.category, activity.subcategory);
     if (activity.endTime) {
       activity.durationMinutes = this.calculateDurationMinutes(
         new Date(activity.startTime),
