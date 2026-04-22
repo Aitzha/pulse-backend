@@ -16,7 +16,21 @@ export class ActivitiesService {
     userId: string,
     dto: CreateActivityDto,
   ): Promise<ActivityDocument> {
-    return this.activityModel.create({ ...dto, userId });
+    const activity = new this.activityModel({ ...dto, userId });
+    if (activity.endTime) {
+      activity.durationMinutes = this.calculateDurationMinutes(
+        activity.startTime,
+        activity.endTime,
+      );
+    }
+    return activity.save();
+  }
+
+  private calculateDurationMinutes(startTime: Date, endTime: Date): number {
+    return Math.max(
+      0,
+      Math.round((endTime.getTime() - startTime.getTime()) / 60000),
+    );
   }
 
   async findAllByUser(
@@ -49,12 +63,19 @@ export class ActivitiesService {
     dto: UpdateActivityDto,
   ): Promise<ActivityDocument> {
     const activity = await this.activityModel
-      .findOneAndUpdate({ _id: id, userId }, dto, { new: true })
+      .findOne({ _id: id, userId })
       .exec();
     if (!activity) {
       throw new NotFoundException('Activity not found');
     }
-    return activity;
+    Object.assign(activity, dto);
+    if (activity.endTime) {
+      activity.durationMinutes = this.calculateDurationMinutes(
+        new Date(activity.startTime),
+        new Date(activity.endTime),
+      );
+    }
+    return activity.save();
   }
 
   async remove(id: string, userId: string): Promise<void> {

@@ -1,10 +1,8 @@
 import {
   IsDateString,
   IsNotEmpty,
-  IsNumber,
   IsOptional,
   IsString,
-  Min,
 } from 'class-validator';
 
 export class CreateActivityDto {
@@ -26,9 +24,4 @@ export class CreateActivityDto {
   @IsDateString()
   @IsOptional()
   endTime?: string;
-
-  @IsNumber()
-  @Min(0)
-  @IsOptional()
-  durationMinutes?: number;
 }
